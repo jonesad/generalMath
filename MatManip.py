@@ -93,10 +93,14 @@ def weightedlsq(npaCoef, npaWeights, npaData, npaCorr=[]):
 def combinedLabeledColumns(npaLab1, npaVal1, npaLab2, npaVal2):
     import numpy as np
     if type(npaLab1) != type(npaLab2):
-        print 'Error: Labels must be of same type.'
-        print 'type(Label1): ', type(npaLab1)
-        print 'type(Label2): ', type(npaLab2)
-        return None
+        try:
+            npaLab1 = np.array(npaLab1)
+            npaLab2 = np.array(npaLab2)
+        except:
+            print 'Error: Labels must be able to be cast to same type.'
+            print 'type(Label1): ', type(npaLab1)
+            print 'type(Label2): ', type(npaLab2)
+            return None
     bComp1 = isinstance(npaLab1, type(np.array([])))
     bComp2 = isinstance(npaLab2, type(np.array([])))
     if bComp1 and bComp2:
@@ -106,10 +110,8 @@ def combinedLabeledColumns(npaLab1, npaVal1, npaLab2, npaVal2):
         print ('Error: Labels must be of type: ', type(np.array([])),
                ' or type:', list)
         return None
-    set1 = set(npaLab1)
-    set2 = set(npaLab2)
     import MatManip
-    lLabUnion = list(set1 | set2)
+    lLabUnion = MatManip.lnpaUnion(npaLab1, npaLab2)
     MatManip.sortnpaList(lLabUnion)
     npaValNew = np.zeros([npaVal1.shape[0] + npaVal2.shape[0],
                           len(lLabUnion)])
@@ -119,7 +121,7 @@ def combinedLabeledColumns(npaLab1, npaVal1, npaLab2, npaVal2):
                 npaValNew[:npaVal1.shape[0], nIdx] = npaVal1[:, nIdx1]
         for nIdx2, lab2 in enumerate(npaLab2):
             if np.all(lab == lab2):
-                npaValNew[npaVal1.shape[0]:, nIdx] = npaVal2[:, nIdx1]
+                npaValNew[(npaVal1.shape[0]):, nIdx] = npaVal2[:, nIdx2]
     return lLabUnion, npaValNew
 
 
@@ -148,9 +150,13 @@ def sortnpaList(List1):
     if len(List1) == 0 or len(List1) == 1:
         return List1
     for nIdx, elem in enumerate(List1):
-        if not isinstance(elem, type(np.array([]))):
+        try:
+            List1[nIdx] = np.array(elem)
+        except:
+             ''               
+        if not (isinstance(elem, type(np.array([]))) or isinstance(elem, list)):
             print ('Error: element ', nIdx, ' of input is of type ',
-                   type(elem), 'only numpy arrays are valid.')
+                   type(elem), 'only numpy arrays and lists are valid.')
             return None
     for npaElem in List1:
         if npaElem.size != List1[0].size:
@@ -170,3 +176,48 @@ def sortnpaList(List1):
                     List1[nIdx2] = List1[nIdx1]
                     List1[nIdx1] = temp
     return None
+
+
+# take a list of npas and return the list minus the repitions
+def lnpaSet(lnpa):
+    lnpaOut = []
+    import numpy as np
+    for elem1 in lnpa:
+        bIsIt = False
+        for elem2 in lnpaOut:
+            bIsIt = np.all(elem1 == elem2)
+            if bIsIt:
+                break
+        if not bIsIt:
+            lnpaOut.append(elem1)
+    return lnpaOut
+
+
+def lnpaIntersect(lnpa1, lnpa2):
+    lnpaOut = []
+    import numpy as np
+    for elem1 in lnpa1:
+        for elem2 in lnpa2:
+            if np.all(elem1 == elem2):
+                bIsIt = False
+                for elem3 in lnpaOut:
+                    bIsIt = np.all(elem1 == elem3)
+                    if bIsIt:
+                        break
+                if not bIsIt:
+                    lnpaOut.append(elem1)
+    return lnpaOut
+
+# takes union of lnpa1 and lnpa2 only pass sets of distinguishable elements
+def lnpaUnion(lnpa1, lnpa2):
+    import numpy as np
+    lnpaOut = [elem for elem in lnpa1]
+    for elem2 in lnpa2:
+        bIsIt = False
+        for elem1 in lnpa1:
+            bIsIt = np.all(elem1 == elem2)
+            if bIsIt:
+                break
+        if not bIsIt:
+            lnpaOut.append(elem2)
+    return lnpaOut
