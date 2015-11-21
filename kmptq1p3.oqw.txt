@@ -1,0 +1,11 @@
+not sure what has changesd but need to fix bug in bayes
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch is up-to-date with 'origin/master'.
+#
+# Changes to be committed:
+#	modified:   Bayes.py
+#	modified:   Discrete.pyc
+#
+

@@ -18,7 +18,7 @@ def selectModel(npafIndepVar, npafData, funErrorPDF, lfunPriorParamPDF,
         of parameter distribution, the list of models to select from and a list
         of lists of 2 element lists of the model parameter bounds. For discrete
         parameters, select between functions defined with the different values
-        of the deiscreet parameters. The outputs are the index of the best
+        of the discrete parameters. The outputs are the index of the best
         model and a list of the odds ratios for each model relative to the best
         model.
     '''
@@ -40,7 +40,6 @@ def selectModel(npafIndepVar, npafData, funErrorPDF, lfunPriorParamPDF,
     npaOR = npaOR/np.max(npaOR)
     nBestModel = np.argmin(npaOR)
     return nBestModel, npaOR
-
 
 def normGauss(fX, fMu, fSigma):
     import numpy as np
