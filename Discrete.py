@@ -26,7 +26,13 @@ def balFact(n):
 def GCDofList(lNums):
     from fractions import gcd
     lGCDs = []
-    for nIdx in range(len(lNums)):
-        for nJIdx in range(len(lNums) - nIdx):
-            lGCDs.append(gcd(lNums[nIdx], nJIdx[nIdx + nJIdx]))
-    return max(lGCDs)
+    if isinstance(lNums, list):
+        for nIdx in range(len(lNums)):
+            for nJIdx in range(len(lNums) - nIdx):
+                lGCDs.append(gcd(lNums[nIdx], nJIdx[nIdx + nJIdx]))
+        return max(lGCDs)
+    elif isinstance(lNums, int):
+        return lNums
+    else:
+        print 'Error: "...\generalmath\discrete.py". function: GCDorList.'
+        print 'Argument must be a int or list of ints not:', type(lNums)
