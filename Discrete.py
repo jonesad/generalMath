@@ -25,11 +25,12 @@ def balFact(n):
 # Of a list of numbers return their collective greatest commom divisor
 def GCDofList(lNums):
     from fractions import gcd
+    import numpy
     lGCDs = []
-    if isinstance(lNums, list):
+    if isinstance(lNums, list) or isinstance(lNums, numpy.ndarray):
         for nIdx in range(len(lNums)):
             for nJIdx in range(len(lNums) - nIdx):
-                lGCDs.append(gcd(lNums[nIdx], nJIdx[nIdx + nJIdx]))
+                lGCDs.append(gcd(lNums[nIdx], lNums[nIdx + nJIdx]))
         return max(lGCDs)
     elif isinstance(lNums, int):
         return lNums
